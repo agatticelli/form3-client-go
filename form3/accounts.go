@@ -86,3 +86,15 @@ func (c *Client) DeleteAccount(ctx context.Context, ID string, version int64) er
 
 	return c.Do(ctx, http.MethodDelete, uri, nil, nil)
 }
+
+func (c *Client) FetchAccount(ctx context.Context, ID string) (*Account, *Form3BodyResponseLinks, error) {
+	uri := fmt.Sprintf("organisation/accounts/%s", ID)
+
+	accountResponse := FetchAccountResponse{}
+	err := c.Do(ctx, http.MethodGet, uri, nil, &accountResponse)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return &accountResponse.Data, &accountResponse.Links, nil
+}
