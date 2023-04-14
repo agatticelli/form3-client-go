@@ -2,6 +2,7 @@ package form3
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 )
 
@@ -78,4 +79,10 @@ func (c *Client) CreateAccount(ctx context.Context, ID string, organisationID st
 	}
 
 	return &accountResponse.Data, &accountResponse.Links, nil
+}
+
+func (c *Client) DeleteAccount(ctx context.Context, ID string, version int64) error {
+	uri := fmt.Sprintf("organisation/accounts/%s?version=%d", ID, version)
+
+	return c.Do(ctx, http.MethodDelete, uri, nil, nil)
 }
