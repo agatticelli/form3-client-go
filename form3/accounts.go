@@ -85,7 +85,7 @@ func (as *AccountService) Create(ctx context.Context, ID string, organisationID 
 	accountResponse := CreateAccountResponse{}
 	err := as.client.Do(ctx, http.MethodPost, defaultAccountsPath, formData, &accountResponse)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("error creating account: %w", err)
 	}
 
 	return &accountResponse.Data, &accountResponse.Links, nil
@@ -95,7 +95,12 @@ func (as *AccountService) Create(ctx context.Context, ID string, organisationID 
 func (as *AccountService) Delete(ctx context.Context, ID string, version int64) error {
 	uri := fmt.Sprintf("%s/%s?version=%d", defaultAccountsPath, ID, version)
 
-	return as.client.Do(ctx, http.MethodDelete, uri, nil, nil)
+	err := as.client.Do(ctx, http.MethodDelete, uri, nil, nil)
+	if err != nil {
+		return fmt.Errorf("error deleting account: %w", err)
+	}
+
+	return nil
 }
 
 // Fetch fetches an account against the Form3 API.
@@ -105,7 +110,7 @@ func (as *AccountService) Fetch(ctx context.Context, ID string) (*Account, *Form
 	accountResponse := FetchAccountResponse{}
 	err := as.client.Do(ctx, http.MethodGet, uri, nil, &accountResponse)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, fmt.Errorf("error fetching account: %w", err)
 	}
 
 	return &accountResponse.Data, &accountResponse.Links, nil

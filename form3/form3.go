@@ -76,16 +76,22 @@ func NewClient(httpClient *http.Client) *Client {
 func (c *Client) Do(ctx context.Context, method, url string, body, result interface{}) error {
 	req, err := c.newRequest(ctx, method, url, body)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create request: %w", err)
 	}
 
 	res, err := c.client.Do(req)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to send request: %w", err)
 	}
 	defer res.Body.Close()
 
-	return c.decodeBody(res, result)
+	err = c.decodeBody(res, result)
+
+	if err != nil {
+		return fmt.Errorf("failed to decode response body: %w", err)
+	}
+
+	return nil
 }
 
 // newRequest creates an HTTP request with the given method, URL and body (if any).
@@ -93,7 +99,7 @@ func (c *Client) newRequest(ctx context.Context, method, uri string, body interf
 	// First we parse the uri which includes the path and query parameters.
 	parsedUri, err := url.Parse(uri)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse uri: %w", err)
 	}
 
 	// We only keep the Path and RawQuery from the parsed uri and resolve it against the base URL.
@@ -110,14 +116,14 @@ func (c *Client) newRequest(ctx context.Context, method, uri string, body interf
 	if body != nil {
 		marshalledBody, err = json.Marshal(body)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to marshal body: %w", err)
 		}
 	}
 
 	// We create the request with the given context.
 	req, err := http.NewRequestWithContext(ctx, method, u.String(), bytes.NewReader(marshalledBody))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	// We need to set the content-type to application/json if the body is not nil.
@@ -136,7 +142,7 @@ func (c *Client) decodeBody(res *http.Response, result interface{}) error {
 
 	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read response body: %w", err)
 	}
 
 	// If the status code is not 2xx, we try to decode the response body as an error.
@@ -152,7 +158,7 @@ func (c *Client) decodeBody(res *http.Response, result interface{}) error {
 		var errorResult Form3BodyResponseError
 		err = json.Unmarshal(resBody, &errorResult)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to decode error response body: %w", err)
 		}
 
 		// If the response body is not empty, we return the error message that we received in the response.
