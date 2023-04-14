@@ -6,6 +6,9 @@ import (
 	"net/http"
 )
 
+// defaults
+const defaultAccountsPath = "organisation/accounts"
+
 // HTTP entities
 // Ref: https://www.api-docs.form3.tech/api/schemes/fps-direct/accounts/accounts/create-an-account
 type CreateAccountRequest = Form3BodyRequest[CreateAccountData]
@@ -62,10 +65,13 @@ type AccountAttributes struct {
 	Switched                *bool    `json:"switched,omitempty"`
 }
 
+// AccountService has methods to communicate with the account related methods of the Form3 API.
 type AccountService struct {
+	// client is the client used to communicate with the Form3 API.
 	client *Client
 }
 
+// Create creates a new account against the Form3 API.
 func (as *AccountService) Create(ctx context.Context, ID string, organisationID string, attributes *CreateAccountAttributes) (*Account, *Form3BodyResponseLinks, error) {
 	formData := CreateAccountRequest{
 		Data: CreateAccountData{
@@ -77,7 +83,7 @@ func (as *AccountService) Create(ctx context.Context, ID string, organisationID 
 	}
 
 	accountResponse := CreateAccountResponse{}
-	err := as.client.Do(ctx, http.MethodPost, "organisation/accounts", formData, &accountResponse)
+	err := as.client.Do(ctx, http.MethodPost, defaultAccountsPath, formData, &accountResponse)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -85,14 +91,16 @@ func (as *AccountService) Create(ctx context.Context, ID string, organisationID 
 	return &accountResponse.Data, &accountResponse.Links, nil
 }
 
+// Delete deletes an account against the Form3 API.
 func (as *AccountService) Delete(ctx context.Context, ID string, version int64) error {
-	uri := fmt.Sprintf("organisation/accounts/%s?version=%d", ID, version)
+	uri := fmt.Sprintf("%s/%s?version=%d", defaultAccountsPath, ID, version)
 
 	return as.client.Do(ctx, http.MethodDelete, uri, nil, nil)
 }
 
+// Fetch fetches an account against the Form3 API.
 func (as *AccountService) Fetch(ctx context.Context, ID string) (*Account, *Form3BodyResponseLinks, error) {
-	uri := fmt.Sprintf("organisation/accounts/%s", ID)
+	uri := fmt.Sprintf("%s/%s", defaultAccountsPath, ID)
 
 	accountResponse := FetchAccountResponse{}
 	err := as.client.Do(ctx, http.MethodGet, uri, nil, &accountResponse)

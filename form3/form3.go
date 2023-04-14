@@ -44,6 +44,7 @@ func (e *Form3APIError) Error() string {
 	return fmt.Sprintf("Failed request with status code %d: %s", e.StatusCode, e.Message)
 }
 
+// Client handles communication with the Form3 API. It contains the underlying configuration and needed services.
 type Client struct {
 	// HTTP client used to make requests.
 	client *http.Client
@@ -55,6 +56,7 @@ type Client struct {
 	Account *AccountService
 }
 
+// NewClient returns a new Form3 API client.
 func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
@@ -70,6 +72,7 @@ func NewClient(httpClient *http.Client) *Client {
 	return client
 }
 
+// Do sends HTTP API requests and returns the corresponding response or error.
 func (c *Client) Do(ctx context.Context, method, url string, body, result interface{}) error {
 	req, err := c.newRequest(ctx, method, url, body)
 	if err != nil {
@@ -85,11 +88,16 @@ func (c *Client) Do(ctx context.Context, method, url string, body, result interf
 	return c.decodeBody(res, result)
 }
 
+// newRequest creates an HTTP request with the given method, URL and body (if any).
 func (c *Client) newRequest(ctx context.Context, method, uri string, body interface{}) (*http.Request, error) {
+	// First we parse the uri which includes the path and query parameters.
 	parsedUri, err := url.Parse(uri)
 	if err != nil {
 		return nil, err
 	}
+
+	// We only keep the Path and RawQuery from the parsed uri and resolve it against the base URL.
+	// This is needed because the uri might contain a full URL with a different host.s
 	uriRef := url.URL{
 		Path:     parsedUri.Path,
 		RawQuery: parsedUri.RawQuery,
@@ -98,6 +106,7 @@ func (c *Client) newRequest(ctx context.Context, method, uri string, body interf
 
 	var marshalledBody []byte
 
+	// If the body is not nil, we marshal it to JSON.
 	if body != nil {
 		marshalledBody, err = json.Marshal(body)
 		if err != nil {
@@ -105,11 +114,13 @@ func (c *Client) newRequest(ctx context.Context, method, uri string, body interf
 		}
 	}
 
+	// We create the request with the given context.
 	req, err := http.NewRequestWithContext(ctx, method, u.String(), bytes.NewReader(marshalledBody))
 	if err != nil {
 		return nil, err
 	}
 
+	// We need to set the content-type to application/json if the body is not nil.
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
@@ -117,6 +128,7 @@ func (c *Client) newRequest(ctx context.Context, method, uri string, body interf
 	return req, nil
 }
 
+// decodeBody decodes the response body into the given result taking into account the status code and possible errors.
 func (c *Client) decodeBody(res *http.Response, result interface{}) error {
 	if res.StatusCode == http.StatusNoContent {
 		return nil
@@ -127,8 +139,10 @@ func (c *Client) decodeBody(res *http.Response, result interface{}) error {
 		return err
 	}
 
+	// If the status code is not 2xx, we try to decode the response body as an error.
 	if res.StatusCode < 200 || res.StatusCode > 299 {
 		if len(resBody) == 0 {
+			// If the response body is empty, we return a generic error.
 			return &Form3APIError{
 				StatusCode: res.StatusCode,
 				Message:    http.StatusText(res.StatusCode),
@@ -141,6 +155,7 @@ func (c *Client) decodeBody(res *http.Response, result interface{}) error {
 			return err
 		}
 
+		// If the response body is not empty, we return the error message that we received in the response.
 		return &Form3APIError{
 			StatusCode: res.StatusCode,
 			Message:    errorResult.ErrorMessage,
@@ -150,6 +165,7 @@ func (c *Client) decodeBody(res *http.Response, result interface{}) error {
 	return json.Unmarshal(resBody, result)
 }
 
+// Generic helper to convert a value to a pointer of the same type.
 func ToPointer[T any](value T) *T {
 	return &value
 }

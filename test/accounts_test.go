@@ -11,6 +11,7 @@ import (
 
 const existingAccountID = "d290f1ee-6c54-4b01-90e6-d701748f0851"
 
+// accountFactory returns a new account with the given ID and country for quick testing
 func accountFactory(ID, country string) *form3.CreateAccountData {
 	return &form3.CreateAccountData{
 		ID:             ID,
@@ -43,6 +44,7 @@ func truncateAccountsTable(t *testing.T, client *form3.Client) {
 	t.Helper()
 
 	var accountList form3.Form3BodyResponse[[]form3.Account]
+	// We need to fetch all accounts to delete them.
 	err := client.Do(context.Background(), http.MethodGet, "organisation/accounts", nil, &accountList)
 	if err != nil {
 		t.Fatal(err)
