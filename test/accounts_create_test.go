@@ -48,7 +48,7 @@ func Test_CreateAccount(t *testing.T) {
 			accountsTableSeeder(t, client)
 
 			// create test case account
-			_, _, err := client.CreateAccount(context.Background(), tc.accountToCreate.ID, tc.accountToCreate.OrganisationID, tc.accountToCreate.Attributes)
+			_, _, err := client.Account.Create(context.Background(), tc.accountToCreate.ID, tc.accountToCreate.OrganisationID, tc.accountToCreate.Attributes)
 
 			// check errors
 			if tc.expectAPIError {
@@ -78,7 +78,7 @@ func Test_CreateAccount(t *testing.T) {
 func createAccountExistsChecker(t *testing.T, client *form3.Client, createdAccount *form3.CreateAccountData) error {
 	t.Helper()
 
-	account, _, err := client.FetchAccount(context.Background(), createdAccount.ID)
+	account, _, err := client.Account.Fetch(context.Background(), createdAccount.ID)
 	if err != nil {
 		return fmt.Errorf("error fetching account: %v", err)
 	}

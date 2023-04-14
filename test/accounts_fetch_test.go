@@ -43,7 +43,7 @@ func Test_FetchAccount(t *testing.T) {
 			accountsTableSeeder(t, client)
 
 			// fetch test case account
-			account, _, err := client.FetchAccount(context.Background(), tc.accountID)
+			account, _, err := client.Account.Fetch(context.Background(), tc.accountID)
 
 			// check errors
 			if tc.expectAPIError {

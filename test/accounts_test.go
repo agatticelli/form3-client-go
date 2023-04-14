@@ -33,7 +33,7 @@ func accountsTableSeeder(t *testing.T, client *form3.Client) {
 	truncateAccountsTable(t, client)
 
 	createAccountData := accountFactory(existingAccountID, "GB")
-	_, _, err := client.CreateAccount(context.Background(), createAccountData.ID, createAccountData.OrganisationID, createAccountData.Attributes)
+	_, _, err := client.Account.Create(context.Background(), createAccountData.ID, createAccountData.OrganisationID, createAccountData.Attributes)
 	if err != nil {
 		t.Fatalf("error seeding account: %v", err)
 	}
@@ -49,6 +49,6 @@ func truncateAccountsTable(t *testing.T, client *form3.Client) {
 	}
 
 	for _, account := range accountList.Data {
-		client.DeleteAccount(context.Background(), account.ID, *account.Version)
+		client.Account.Delete(context.Background(), account.ID, *account.Version)
 	}
 }

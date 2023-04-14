@@ -50,6 +50,9 @@ type Client struct {
 
 	// Base URL of the Form3 API.
 	BaseURL *url.URL
+
+	// Form3 services
+	Account *AccountService
 }
 
 func NewClient(httpClient *http.Client) *Client {
@@ -59,7 +62,12 @@ func NewClient(httpClient *http.Client) *Client {
 
 	baseURL, _ := url.Parse(defaultBaseURL)
 
-	return &Client{client: httpClient, BaseURL: baseURL}
+	client := &Client{client: httpClient, BaseURL: baseURL}
+
+	// attach services
+	client.Account = &AccountService{client: client}
+
+	return client
 }
 
 func (c *Client) Do(ctx context.Context, method, url string, body, result interface{}) error {

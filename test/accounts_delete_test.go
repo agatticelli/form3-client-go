@@ -56,14 +56,14 @@ func Test_DeleteAccount(t *testing.T) {
 
 			// first check that account exists
 			if tc.accountExistsCheck {
-				account, _, err := client.FetchAccount(context.Background(), tc.accountID)
+				account, _, err := client.Account.Fetch(context.Background(), tc.accountID)
 				if err != nil || account.ID != tc.accountID {
 					t.Fatalf("account %s should exists", tc.accountID)
 				}
 			}
 
 			// delete test case account
-			err := client.DeleteAccount(context.Background(), tc.accountID, tc.version)
+			err := client.Account.Delete(context.Background(), tc.accountID, tc.version)
 
 			// check errors
 			if tc.expectAPIError {
@@ -93,7 +93,7 @@ func Test_DeleteAccount(t *testing.T) {
 func deleteAccountExistsChecker(t *testing.T, accountID string) error {
 	t.Helper()
 
-	_, _, err := client.FetchAccount(context.Background(), accountID)
+	_, _, err := client.Account.Fetch(context.Background(), accountID)
 	if err == nil {
 		return fmt.Errorf("account should not exists")
 	}

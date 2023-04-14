@@ -62,7 +62,11 @@ type AccountAttributes struct {
 	Switched                *bool    `json:"switched,omitempty"`
 }
 
-func (c *Client) CreateAccount(ctx context.Context, ID string, organisationID string, attributes *CreateAccountAttributes) (*Account, *Form3BodyResponseLinks, error) {
+type AccountService struct {
+	client *Client
+}
+
+func (as *AccountService) Create(ctx context.Context, ID string, organisationID string, attributes *CreateAccountAttributes) (*Account, *Form3BodyResponseLinks, error) {
 	formData := CreateAccountRequest{
 		Data: CreateAccountData{
 			ID:             ID,
@@ -73,7 +77,7 @@ func (c *Client) CreateAccount(ctx context.Context, ID string, organisationID st
 	}
 
 	accountResponse := CreateAccountResponse{}
-	err := c.Do(ctx, http.MethodPost, "organisation/accounts", formData, &accountResponse)
+	err := as.client.Do(ctx, http.MethodPost, "organisation/accounts", formData, &accountResponse)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -81,17 +85,17 @@ func (c *Client) CreateAccount(ctx context.Context, ID string, organisationID st
 	return &accountResponse.Data, &accountResponse.Links, nil
 }
 
-func (c *Client) DeleteAccount(ctx context.Context, ID string, version int64) error {
+func (as *AccountService) Delete(ctx context.Context, ID string, version int64) error {
 	uri := fmt.Sprintf("organisation/accounts/%s?version=%d", ID, version)
 
-	return c.Do(ctx, http.MethodDelete, uri, nil, nil)
+	return as.client.Do(ctx, http.MethodDelete, uri, nil, nil)
 }
 
-func (c *Client) FetchAccount(ctx context.Context, ID string) (*Account, *Form3BodyResponseLinks, error) {
+func (as *AccountService) Fetch(ctx context.Context, ID string) (*Account, *Form3BodyResponseLinks, error) {
 	uri := fmt.Sprintf("organisation/accounts/%s", ID)
 
 	accountResponse := FetchAccountResponse{}
-	err := c.Do(ctx, http.MethodGet, uri, nil, &accountResponse)
+	err := as.client.Do(ctx, http.MethodGet, uri, nil, &accountResponse)
 	if err != nil {
 		return nil, nil, err
 	}
