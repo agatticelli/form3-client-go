@@ -141,3 +141,7 @@ func (c *Client) decodeBody(res *http.Response, result interface{}) error {
 
 	return json.Unmarshal(resBody, result)
 }
+
+func ToPointer[T any](value T) *T {
+	return &value
+}

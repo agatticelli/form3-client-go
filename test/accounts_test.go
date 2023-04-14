@@ -16,11 +16,12 @@ func accountFactory(ID, country string) *form3.CreateAccountData {
 		ID:             ID,
 		OrganisationID: uuid.New().String(),
 		Attributes: &form3.CreateAccountAttributes{
-			BankID:     "400300",
-			BankIDCode: "GBDSC",
-			Bic:        "NWBKGB22",
-			Name:       []string{"Samantha Holder"},
-			Country:    country,
+			BankID:        "400300",
+			BankIDCode:    "GBDSC",
+			Bic:           "NWBKGB22",
+			Name:          []string{"Samantha Holder"},
+			Country:       country,
+			AccountNumber: form3.ToPointer("31926819"),
 		},
 	}
 }
