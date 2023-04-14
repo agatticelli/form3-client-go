@@ -1,5 +1,10 @@
 package form3
 
+import (
+	"context"
+	"net/http"
+)
+
 // HTTP entities
 // Ref: https://www.api-docs.form3.tech/api/schemes/fps-direct/accounts/accounts/create-an-account
 type CreateAccountRequest = Form3BodyRequest[CreateAccountData]
@@ -54,4 +59,23 @@ type AccountAttributes struct {
 	SecondaryIdentification string   `json:"secondary_identification,omitempty"`
 	Status                  *string  `json:"status,omitempty"`
 	Switched                *bool    `json:"switched,omitempty"`
+}
+
+func (c *Client) CreateAccount(ctx context.Context, ID string, organisationID string, attributes *CreateAccountAttributes) (*Account, *Form3BodyResponseLinks, error) {
+	formData := CreateAccountRequest{
+		Data: CreateAccountData{
+			ID:             ID,
+			OrganisationID: organisationID,
+			Type:           "accounts",
+			Attributes:     attributes,
+		},
+	}
+
+	accountResponse := CreateAccountResponse{}
+	err := c.Do(ctx, http.MethodPost, "organisation/accounts", formData, &accountResponse)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return &accountResponse.Data, &accountResponse.Links, nil
 }
