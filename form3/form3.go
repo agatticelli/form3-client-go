@@ -82,7 +82,11 @@ func (c *Client) newRequest(ctx context.Context, method, uri string, body interf
 	if err != nil {
 		return nil, err
 	}
-	u := c.BaseURL.ResolveReference(parsedUri)
+	uriRef := url.URL{
+		Path:     parsedUri.Path,
+		RawQuery: parsedUri.RawQuery,
+	}
+	u := c.BaseURL.ResolveReference(&uriRef)
 
 	var marshalledBody []byte
 
