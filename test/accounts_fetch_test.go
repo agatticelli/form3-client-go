@@ -2,6 +2,7 @@ package integration
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"testing"
 
@@ -50,7 +51,7 @@ func Test_FetchAccount(t *testing.T) {
 				if err == nil {
 					t.Fatal("expected error but got none")
 				}
-				if _, ok := err.(*form3.Form3APIError); !ok {
+				if errors.Is(err, &form3.Form3APIError{}) {
 					t.Fatalf("expected Form3APIError but got %T", err)
 				}
 				return

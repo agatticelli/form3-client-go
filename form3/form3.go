@@ -87,11 +87,12 @@ func (c *Client) Do(ctx context.Context, method, url string, body, result interf
 
 	err = c.decodeBody(res, result)
 
-	if err != nil {
+	_, ok := err.(*Form3APIError)
+	if err != nil && !ok {
 		return fmt.Errorf("failed to decode response body: %w", err)
 	}
 
-	return nil
+	return err
 }
 
 // newRequest creates an HTTP request with the given method, URL and body (if any).

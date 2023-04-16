@@ -17,10 +17,10 @@ func accountFactory(ID, country string) *form3.CreateAccountData {
 		ID:             ID,
 		OrganisationID: uuid.New().String(),
 		Attributes: &form3.CreateAccountAttributes{
-			BankID:        "400300",
-			BankIDCode:    "GBDSC",
-			Bic:           "NWBKGB22",
-			Name:          []string{"Samantha Holder"},
+			BankID:        "20041",
+			BankIDCode:    "FR",
+			Bic:           "NWBKFR42",
+			Name:          []string{"Alan Gatticelli"},
 			Country:       country,
 			AccountNumber: form3.ToPointer("31926819"),
 		},
@@ -33,7 +33,7 @@ func accountsTableSeeder(t *testing.T, client *form3.Client) {
 	// First, let's delete all records from previous failed tests
 	truncateAccountsTable(t, client)
 
-	createAccountData := accountFactory(existingAccountID, "GB")
+	createAccountData := accountFactory(existingAccountID, "FR")
 	_, _, err := client.Account.Create(context.Background(), createAccountData.ID, createAccountData.OrganisationID, createAccountData.Attributes)
 	if err != nil {
 		t.Fatalf("error seeding account: %v", err)
