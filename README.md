@@ -46,19 +46,24 @@ err := client.Account.Delete(context.Background(), accountID, version)
 
 # Contributing
 
-In order to run tests you need to be in the root path and start all the services with
+In order to run tests all the available tests, unit and integration, you need to be in the root path and start all the services with
 
 ```bash
 docker compose up -d
 ```
 
-After all services finished bootstraping, you should run
+After all services finished bootstraping, you should run every time you want to run tests.
 
 ```bash
 docker compose up form3-client
 ```
 
-every time you want to run tests.
+Also, you can run unit tests only like this
+
+```bash
+cd form3
+go test -v ./...
+```
 
 # Extras (for the Form3 team)
 
