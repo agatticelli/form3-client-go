@@ -12,4 +12,4 @@ RUN go mod download
 # Copy the source from the current directory to the working directory
 COPY . .
 
-CMD ["go", "test", "-v", "./..."]
+CMD ["./scripts/run-tests.sh"]
