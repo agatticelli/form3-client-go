@@ -11,6 +11,7 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 )
 
 func Test_ToPointer(t *testing.T) {
@@ -375,6 +376,17 @@ func TestClient_Do(t *testing.T) {
 			wantErr:      nil,
 			expectedBody: `{"data":{"id":"10000"}}`,
 		},
+		{
+			name:   "Test Client.Do() with timeout",
+			method: http.MethodGet,
+			path:   "/v1/accounts/10",
+			handleFunc: func(w http.ResponseWriter, r *http.Request) {
+				time.Sleep(2 * time.Second)
+				w.WriteHeader(http.StatusOK)
+				w.Write([]byte(`{"data": {"id": "10"}}`))
+			},
+			wantErr: &Form3APIError{StatusCode: http.StatusGatewayTimeout, Message: http.StatusText(http.StatusGatewayTimeout)},
+		},
 	}
 
 	for _, tc := range testCases {
@@ -385,7 +397,7 @@ func TestClient_Do(t *testing.T) {
 
 			// Setup client
 			serverUrl, _ := url.Parse(server.URL)
-			client := &Client{BaseURL: serverUrl, client: http.DefaultClient}
+			client := &Client{BaseURL: serverUrl, client: &http.Client{Timeout: 1 * time.Second}}
 
 			// Make request
 			var result map[string]interface{}

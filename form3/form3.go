@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 const (
@@ -81,6 +82,13 @@ func (c *Client) Do(ctx context.Context, method, url string, body, result interf
 
 	res, err := c.client.Do(req)
 	if err != nil {
+		// Check if error is of type timeout
+		if os.IsTimeout(err) {
+			return &Form3APIError{
+				StatusCode: http.StatusGatewayTimeout,
+				Message:    http.StatusText(http.StatusGatewayTimeout),
+			}
+		}
 		return fmt.Errorf("failed to send request: %w", err)
 	}
 	defer res.Body.Close()
