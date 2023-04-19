@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// defaults
+// Defaults
 const defaultAccountsPath = "organisation/accounts"
 
 // HTTP entities

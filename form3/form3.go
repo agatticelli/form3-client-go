@@ -53,7 +53,7 @@ type Client struct {
 	// Base URL of the Form3 API.
 	BaseURL *url.URL
 
-	// Form3 services
+	// Form3 services.
 	Account *AccountService
 }
 
@@ -82,7 +82,7 @@ func (c *Client) Do(ctx context.Context, method, url string, body, result interf
 
 	res, err := c.client.Do(req)
 	if err != nil {
-		// Check if error is of type timeout
+		// Check if error is of type timeout.
 		if os.IsTimeout(err) {
 			return &Form3APIError{
 				StatusCode: http.StatusGatewayTimeout,
@@ -112,7 +112,8 @@ func (c *Client) newRequest(ctx context.Context, method, uri string, body interf
 	}
 
 	// We only keep the Path and RawQuery from the parsed uri and resolve it against the base URL.
-	// This is needed because the uri might contain a full URL with a different host.s
+	// This is needed because the uri might contain a full URL with a different host.
+	// With this we avoid a domain level SSRF attack.
 	uriRef := url.URL{
 		Path:     parsedUri.Path,
 		RawQuery: parsedUri.RawQuery,
