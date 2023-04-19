@@ -10,7 +10,7 @@ Regarding my Golang experience, I met this amazing language 3 years ago and I wo
 
 # Installation
 
-In order to install the SDK, you need to run
+In order to install the SDK, you need to run.
 
 ```bash
 go get github.com/agatticelli/form3-client-go/form3
@@ -56,13 +56,13 @@ err := client.Account.Delete(context.Background(), accountID, version)
 
 # Contributing
 
-In order to run tests all the available tests, unit and integration, you need to be in the root path and start all the services with
+In order to run all the available tests, unit and integration, you need to be in the root path and start all the services with
 
 ```bash
 docker compose up -d
 ```
 
-After all services finished bootstraping, you should run every time you want to run tests.
+After all services finished bootstraping, you should run this every time you want to run the tests.
 
 ```bash
 docker compose up form3-client
@@ -85,7 +85,7 @@ It can happen that the Form3 API raises a **Rate Limit** error by returning a `4
 
 ## Timeout
 
-There are no examples for that, but it can be easily implemented at the client or request level.
+There is an example in the Client.Do() unit test for this, but it can be easily implemented in a real world scenario at the client or request level.
 For example, at client level would be something like the following:
 
 ```go
