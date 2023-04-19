@@ -1,4 +1,4 @@
-# Abount me
+# About me
 
 Hi, I'm Alan Gatticelli 😁.
 
@@ -6,7 +6,7 @@ I've been playing around with programming in the professional industry for 10 ye
 
 My current stack is Typescript + CDK but I also use Python for scripting.
 
-Regarding my Golang experience, I met this amazing language 2 years ago and I would love to dive deep into it.
+Regarding my Golang experience, I met this amazing language 3 years ago and I would love to dive deep into it.
 
 # Installation
 
