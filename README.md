@@ -2,7 +2,7 @@
 
 Hi, I'm Alan Gatticelli 😁.
 
-I've been playing around with programming in the professional industry for 10 years. My main background is software development, but I also have experience in event-driven architectures in AWS, preferably serverless.
+I've been playing around with programming in the professional industry for 10 years. My main background is software development, but I also have experience in event-driven architectures in AWS, mainly serverless.
 
 My current tech stack is Typescript + CDK but I also use Python for scripting.
 
@@ -56,7 +56,7 @@ err := client.Account.Delete(context.Background(), accountID, version)
 
 # Contributing
 
-In order to run all the available tests, unit and integration, you need to be in the root path and start all the services with
+In order to run all available tests, unit and integration, you need to be in the root path and start all the services with
 
 ```bash
 docker compose up -d
@@ -115,6 +115,6 @@ At first, I began with a simple `Client` struct with methods such as CreateAccou
 - `decodeBody` to decode the responses into a valid struct or an error struct.
 - `do` this function was in charge of creating the request with `newRequest`, dispatch it and bind the response by calling the `decodeBody` method.
 
-Then, when working on integration tests structure, I noticed that it would be great to have a way of purging all the previous created accounts to avoid pollution between each test. So I exported the `Do` method to allow users to implement API calls to non implemented endpoints. With that, I was able to call the `List Accounts` endpoint and delete one by one with the `DeleteAccount` method.
+After working a while with integration tests structure, I noticed that it would be great to have a way of purging all the previous created accounts to avoid pollution between each test. So I exported the `Do` method to allow users to implement API calls to non implemented endpoints. With that, I was able to call the `List Accounts` endpoint and delete one by one with the `DeleteAccount` method.
 
 Finally, I realized that the Accounts API is one of the multiple services that Form3 offers, so I created an `AccountService` struct which receives a `form3.Client` instance to make the API calls and with that, I simplify the calls to `account.Create`, `acount.Fetch` and `account.Delete`.
