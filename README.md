@@ -86,7 +86,7 @@ It can happen that the Form3 API raises a **Rate Limit** error by returning a `4
 ## Timeout
 
 There is an example in the Client.Do() unit test for this, but it can be easily implemented in a real world scenario at the client or request level.
-For example, at client level would be something like the following:
+For example, at the client level would be something like the following:
 
 ```go
 httpClient := http.Client{Timeout: 2 * time.Second}
@@ -94,7 +94,7 @@ client := form3.NewClient(&httpClient)
 account, _, _ := client.Account.Fetch(context.Background(), accountID)
 ```
 
-Or it can be done at the request level doing something like:
+Or it can be done at the request level by doing something like:
 
 ```go
 client := form3.NewClient(nil)
@@ -112,9 +112,9 @@ Every HTTP client should have a retry strategy for unexpected errors. This error
 At first, I began with a simple `Client` struct with methods such as CreateAccount, FetchAccount and DeleteAccount. It also had some non-exported methods such as:
 
 - `newRequest` to build a request from scratch with its method and url, encoding of body data, etc
-- `decodeBody` to decode the responses into a valid struct or an error struct.
+- `decodeBody` to decode the response into a valid struct or an error struct.
 - `do` this function was in charge of creating the request with `newRequest`, dispatch it and bind the response by calling the `decodeBody` method.
 
-After working a while with integration tests structure, I noticed that it would be great to have a way of purging all the previous created accounts to avoid pollution between each test. So I exported the `Do` method to allow users to implement API calls to non implemented endpoints. With that, I was able to call the `List Accounts` endpoint and delete one by one with the `DeleteAccount` method.
+After working a while with integration tests structure, I noticed that it would be great to have a way of purging all previous created accounts to avoid pollution between each test. So I exported the `Do` method to allow users to implement API calls to non implemented endpoints. With that, I was able to call the `List Accounts` endpoint and delete one by one with the `DeleteAccount` method.
 
 Finally, I realized that the Accounts API is one of the multiple services that Form3 offers, so I created an `AccountService` struct which receives a `form3.Client` instance to make the API calls and with that, I simplify the calls to `account.Create`, `acount.Fetch` and `account.Delete`.
