@@ -2,7 +2,7 @@
 
 Hi, I'm Alan Gatticelli 😁.
 
-I've been playing around with programming in the professional industry for 10 years. My main background is software development, but I also have experience in event-driven architectures in AWS, mainly serverless.
+I've been playing around with programming in the professional industry for 10 years. My main background is software development, but I also have experience in event-driven architectures in AWS, mainly serverless and a strong background in Application Security (red and blue).
 
 My current tech stack is Typescript + CDK but I also use Python for scripting.
 
