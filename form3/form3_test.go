@@ -385,7 +385,7 @@ func TestClient_Do(t *testing.T) {
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte(`{"data": {"id": "10"}}`))
 			},
-			wantErr: &Form3APIError{StatusCode: http.StatusGatewayTimeout, Message: http.StatusText(http.StatusGatewayTimeout)},
+			wantErr: nil,
 		},
 	}
 
