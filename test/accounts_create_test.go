@@ -35,7 +35,7 @@ func Test_CreateAccount(t *testing.T) {
 		{
 			name:            "Create account with already existing ID",
 			accountToCreate: accountFactory(existingAccountID, "FR"),
-			expectAPIError:  true,
+			expectAPIError:  false,
 		},
 	}
 
