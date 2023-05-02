@@ -11,16 +11,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Start docker containers
+      - name: Start support containers
         run: |
-          docker-compose up --build --detach
+          docker compose up --build --detach
 
       - name: Run backend unit and integration tests
         run: |
-          docker-compose up form3-client
-
-      - if: always()
-        uses: ouzi-dev/commit-status-updater@v2
-        with:
-          name: "Run tests"
-          status: "${{ job.status }}"
+          docker compose up form3-client --exit-code-from form3-client
