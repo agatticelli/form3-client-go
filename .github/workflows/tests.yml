@@ -20,7 +20,7 @@ jobs:
           docker-compose up form3-client
 
       - if: always()
-        uses: ouzi-dev/commit-status-updater@v1.1.0
+        uses: ouzi-dev/commit-status-updater@v2
         with:
           name: "Run tests"
           status: "${{ job.status }}"
