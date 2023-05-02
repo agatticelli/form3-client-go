@@ -17,4 +17,4 @@ jobs:
 
       - name: Run backend unit and integration tests
         run: |
-          docker-compose up form3-client
+          docker-compose up form3-client --exit-code-from form3-client
