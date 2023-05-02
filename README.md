@@ -118,3 +118,5 @@ At first, I began with a simple `Client` struct with methods such as CreateAccou
 After working a while with integration tests structure, I noticed that it would be great to have a way of purging all previous created accounts to avoid pollution between each test. So I exported the `Do` method to allow users to implement API calls to non implemented endpoints. With that, I was able to call the `List Accounts` endpoint and delete one by one with the `DeleteAccount` method.
 
 Finally, I realized that the Accounts API is one of the multiple services that Form3 offers, so I created an `AccountService` struct which receives a `form3.Client` instance to make the API calls and with that, I simplify the calls to `account.Create`, `acount.Fetch` and `account.Delete`.
+
+# Adding workflow
