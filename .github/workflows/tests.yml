@@ -1,0 +1,26 @@
+name: Run tests
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Start docker containers
+        run: |
+          docker-compose up --build --detach
+
+      - name: Run backend unit and integration tests
+        run: |
+          docker-compose up form3-client
+
+      - if: always()
+        uses: ouzi-dev/commit-status-updater@v1.1.0
+        with:
+          name: "Run tests"
+          status: "${{ job.status }}"
