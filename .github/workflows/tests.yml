@@ -13,7 +13,6 @@ jobs:
 
       - name: Start docker containers
         run: |
-          docker compose version
           docker compose up --build --detach
 
       - name: Run backend unit and integration tests
