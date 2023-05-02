@@ -13,8 +13,9 @@ jobs:
 
       - name: Start docker containers
         run: |
-          docker-compose up --build --detach
+          docker compose version
+          docker compose up --build --detach
 
       - name: Run backend unit and integration tests
         run: |
-          docker-compose up form3-client --exit-code-from form3-client
+          docker compose up form3-client --exit-code-from form3-client
