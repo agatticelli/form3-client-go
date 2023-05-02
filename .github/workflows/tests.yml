@@ -18,9 +18,3 @@ jobs:
       - name: Run backend unit and integration tests
         run: |
           docker-compose up form3-client
-
-      - if: always()
-        uses: ouzi-dev/commit-status-updater@v2
-        with:
-          name: "Run tests"
-          status: "${{ job.status }}"
